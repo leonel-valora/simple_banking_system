@@ -1,11 +1,25 @@
 import random
 class CreditCard:
     accounts = dict()
+    
+    def luhn_validation(cc_number):
+        cc_digits_sum = 0
+        index = 1
+        for digit in cc_number:
+            if index % 2 != 0:
+                aux = int(digit) * 2
+                cc_digits_sum +=  aux - 9 if aux > 9 else aux
+            else:
+                cc_digits_sum += int(digit)
+            index += 1
+        checksum = '0' if cc_digits_sum % 10 == 0 else str(10 - (cc_digits_sum % 10)) 
+        return cc_number + checksum
+        
     def create_an_account():
         IIN = str(400000)
         account_identifer = str(random.randint(0, 999999999)).rjust(9, '0')
-        checksum = str(random.randint(0, 9))
-        credit_card_number = IIN + account_identifer + checksum
+        credit_card_number = IIN + account_identifer
+        credit_card_number = CreditCard.luhn_validation(credit_card_number)
         pin = str(random.randint(0, 9999)).rjust(4, '0')
         CreditCard.accounts[credit_card_number] = {}
         CreditCard.accounts[credit_card_number]["pin"] = pin
